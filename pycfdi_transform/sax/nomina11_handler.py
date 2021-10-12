@@ -246,8 +246,14 @@ class Nomina11Handler (xml.sax.ContentHandler, Base32Handler, Base33Handler):
         if ('TipoDeduccion' in attrs):
             tipo_deduccion = attrs['TipoDeduccion']
             importe = '0.00'
+            importeGravado = 0
+            importeExento = 0
             if ('ImporteGravado' in attrs):
-                importe = attrs['ImporteGravado']
+                importeGravado = float(attrs['ImporteGravado'])
+            if ('ImporteExento' in attrs):
+                importeExento = float((attrs['ImporteExento']))
+            if (importeGravado > 0 or importeExento > 0):
+                importe = importeGravado + importeExento
             if (tipo_deduccion in self._deducciones):
                 deduccion = self._deducciones[tipo_deduccion]
                 importe = Base32Handler.sum(self, deduccion[1], importe)
